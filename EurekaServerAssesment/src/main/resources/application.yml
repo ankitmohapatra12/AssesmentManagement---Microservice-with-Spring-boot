@@ -1,0 +1,82 @@
+server:
+  port: 8761
+  
+eureka:
+  instance:
+    hostname: localhost
+    
+  client:
+    fetch-registry: false
+    register-with-eureka: false
+  
+  server:
+    enable-self-preservation: false  #Self-preservation is a feature where Eureka servers stop expiring instances from the registry when they do not receive heartbeats 
+                                     #(from peers and client microservices) beyond a certain threshold. 
+    
+
+---
+  
+spring:
+  config:
+    activate:
+      on-profile: eurekaone
+server:
+  port: 5002
+eureka:
+  instance:
+    hostname: eureka-primary
+    appname: eone
+  client:
+    fetch-registry: true
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://eureka-secondary:5003/eureka,http://eureka-tertiary:5004/eureka
+      
+---
+  
+spring:
+  config:
+    activate:
+      on-profile: eurekatwo
+server:
+  port: 5003
+eureka:
+  instance:
+    hostname: eureka-secondary
+    appname: etwo
+  client:
+    fetch-registry: true
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://eureka-primary:5002/eureka,http://eureka-tertiary:5004/eureka
+      
+---
+  
+spring:
+  config:
+    activate:
+      on-profile: eurekathree
+server:
+  port: 5004
+eureka:
+  instance:
+    hostname: eureka-tertiary
+    appname: ethree
+  client:
+    fetch-registry: true
+    register-with-eureka: false
+    serviceUrl:
+      defaultZone: http://eureka-primary:5002/eureka,http://eureka-secondary:5003/eureka
+      
+        
+      
+
+  
+    
+    
+      
+  
+ 
+  
+
+    
